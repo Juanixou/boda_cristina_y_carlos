@@ -4,6 +4,8 @@ import 'package:wedding_web/widgets/video_section_container.dart';
 import 'package:wedding_web/widgets/wedding_details_section.dart';
 import 'package:wedding_web/widgets/hotels_section.dart';
 import 'package:wedding_web/widgets/hair_salons_section.dart';
+import 'package:wedding_web/widgets/how_to_get_there_section.dart';
+import 'package:wedding_web/widgets/wedding_list_section.dart';
 import 'package:wedding_web/widgets/rsvp_form_section.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -43,10 +45,16 @@ class HomeScreen extends StatelessWidget {
             const HotelsSection(),
             
             // Sección de Peluquerías
-            const HairSalonsSection(),
+            //const HairSalonsSection(),
+            
+            // Sección de Cómo llegar
+            const HowToGetThereSection(),
+            
+            // Sección de Lista de bodas
+            const WeddingListSection(),
             
             // Sección de Formulario RSVP
-            //const RSVPFormSection(),
+            const RSVPFormSection(),
           ],
         ),
       ),

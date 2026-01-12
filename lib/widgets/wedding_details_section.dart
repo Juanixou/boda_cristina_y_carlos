@@ -45,7 +45,7 @@ class WeddingDetailsSection extends StatelessWidget {
                         _buildEventCard(
                           context,
                           title: 'Ceremonia',
-                          time: '12:00',
+                          time: '12:30',
                           location: 'Catedral de Toledo',
                           address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
                           mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
@@ -56,7 +56,7 @@ class WeddingDetailsSection extends StatelessWidget {
                         _buildEventCard(
                           context,
                           title: 'Celebración',
-                          time: '13:30',
+                          time: '14:00',
                           location: 'Cigarral El Ángel',
                           address: 'Cigarral El Ángel, Toledo',
                           mapUrl: 'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
@@ -72,7 +72,7 @@ class WeddingDetailsSection extends StatelessWidget {
                           child: _buildEventCard(
                             context,
                             title: 'Ceremonia',
-                            time: '12:00',
+                            time: '12:30',
                             location: 'Catedral de Toledo',
                             address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
                             mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
@@ -85,7 +85,7 @@ class WeddingDetailsSection extends StatelessWidget {
                           child: _buildEventCard(
                             context,
                             title: 'Celebración',
-                            time: '13:30',
+                            time: '14:00',
                             location: 'Cigarral El Ángel',
                             address: 'Cigarral El Ángel, Toledo',
                             mapUrl: 'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
