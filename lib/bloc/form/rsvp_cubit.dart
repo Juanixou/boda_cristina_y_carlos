@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wedding_web/bloc/form/rsvp_state.dart';
 import 'package:wedding_web/models/rsvp_form.dart';
 import 'package:wedding_web/repositories/rsvp_repository.dart';
+import 'package:wedding_web/utils/logger.dart';
 
 class RSVPCubit extends Cubit<RSVPState> {
   final RSVPRepository repository;
@@ -27,19 +28,49 @@ class RSVPCubit extends Cubit<RSVPState> {
     emit(RSVPInitial(form: currentForm.copyWith(name: name)));
   }
 
+  void updateWillAttend(bool? willAttend) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(willAttend: willAttend)));
+  }
+
   void updateHasCompanion(bool hasCompanion) {
     final currentForm = _getCurrentForm();
     emit(RSVPInitial(
       form: currentForm.copyWith(
         hasCompanion: hasCompanion,
-        companionName: hasCompanion ? currentForm.companionName : null,
+        companionNames: hasCompanion ? currentForm.companionNames : null,
       ),
     ));
   }
 
-  void updateCompanionName(String? companionName) {
+  void updateCompanionNames(String? companionNames) {
     final currentForm = _getCurrentForm();
-    emit(RSVPInitial(form: currentForm.copyWith(companionName: companionName)));
+    emit(RSVPInitial(form: currentForm.copyWith(companionNames: companionNames)));
+  }
+
+  void updateMenuOption(String? menuOption) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(menuOption: menuOption)));
+  }
+
+  void updateBusToCelebration(String? busToCelebration) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(busToCelebration: busToCelebration)));
+  }
+
+  void updateBusReturn(String? busReturn) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(busReturn: busReturn)));
+  }
+
+  void updateStayingInToledo(bool? stayingInToledo) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(stayingInToledo: stayingInToledo)));
+  }
+
+  void updateHotelName(String? hotelName) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(hotelName: hotelName)));
   }
 
   void toggleAllergy(String allergy) {
@@ -58,15 +89,15 @@ class RSVPCubit extends Cubit<RSVPState> {
     emit(RSVPInitial(form: currentForm.copyWith(otherAllergies: otherAllergies)));
   }
 
-  void updateNeedsBus(bool needsBus) {
-    final currentForm = _getCurrentForm();
-    emit(RSVPInitial(form: currentForm.copyWith(needsBus: needsBus)));
-  }
 
   Future<void> submitForm() async {
     final currentForm = _getCurrentForm();
+    AppLogger.info('🚀 Cubit: Iniciando envío de formulario RSVP');
+    AppLogger.debug('📝 Estado actual del formulario', data: currentForm.toJson());
     
+    // Validación: Nombre
     if (currentForm.name.isEmpty) {
+      AppLogger.warning('⚠️ Validación fallida: Nombre vacío');
       emit(RSVPError(
         message: 'El nombre es obligatorio',
         form: currentForm,
@@ -74,20 +105,47 @@ class RSVPCubit extends Cubit<RSVPState> {
       return;
     }
 
-    if (currentForm.hasCompanion && (currentForm.companionName == null || currentForm.companionName!.isEmpty)) {
+    // Validación: Asistencia
+    if (currentForm.willAttend == null) {
+      AppLogger.warning('⚠️ Validación fallida: No se indicó si asistirá');
       emit(RSVPError(
-        message: 'El nombre del acompañante es obligatorio',
+        message: 'Por favor, indica si asistirás a la boda',
         form: currentForm,
       ));
       return;
     }
 
+    // Si no asistirá, puede terminar aquí
+    if (currentForm.willAttend == false) {
+      AppLogger.info('ℹ️ Usuario no asistirá - envío simplificado');
+    } else {
+      AppLogger.info('✅ Usuario asistirá - validando campos adicionales');
+      
+      // Si asistirá, validar campos obligatorios
+      if (currentForm.hasCompanion && (currentForm.companionNames == null || currentForm.companionNames!.isEmpty)) {
+        AppLogger.warning('⚠️ Validación fallida: Tiene acompañante pero no se indicó nombre');
+        emit(RSVPError(
+          message: 'Por favor, indica el nombre de los acompañantes',
+          form: currentForm,
+        ));
+        return;
+      }
+    }
+
+    AppLogger.info('✅ Validaciones pasadas - Cambiando a estado RSVPSubmitting');
     emit(RSVPSubmitting(form: currentForm));
 
     try {
+      AppLogger.info('📤 Cubit: Llamando al repository para enviar RSVP');
       await repository.submitRSVP(currentForm);
+      AppLogger.info('✅ Cubit: RSVP enviado exitosamente - Cambiando a RSVPSuccess');
       emit(RSVPSuccess(message: '¡Gracias por confirmar tu asistencia!'));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        '❌ Cubit: Error al enviar formulario',
+        error: e,
+        stackTrace: stackTrace,
+      );
       emit(RSVPError(
         message: 'Error al enviar el formulario: ${e.toString()}',
         form: currentForm,
@@ -96,6 +154,7 @@ class RSVPCubit extends Cubit<RSVPState> {
   }
 
   void resetForm() {
+    AppLogger.info('🔄 Cubit: Reseteando formulario');
     emit(RSVPInitial(form: RSVPForm(name: '')));
   }
 }
