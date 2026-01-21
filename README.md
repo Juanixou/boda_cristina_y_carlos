@@ -18,9 +18,11 @@ Este proyecto está configurado para desplegarse automáticamente en GitHub Page
    
    **Nota importante:** Si ves una sección sobre "Custom domain" o "Verified domain", puedes ignorarla completamente. No es necesaria para usar GitHub Pages con el dominio gratuito de GitHub.
 
-2. **Ajusta el nombre del repositorio (si es necesario):**
-   - Si tu repositorio se llama diferente a `wedding_web`, edita el archivo `.github/workflows/deploy.yml`
-   - Cambia `--base-href "/wedding_web/"` por `--base-href "/TU_NOMBRE_REPOSITORIO/"`
+2. **Renombra el repositorio (importante):**
+   - Para que la URL funcione correctamente, renombra tu repositorio a `boda_cristina_y_carlos`
+   - Ve a `Settings` → `General` → `Repository name` en tu repositorio de GitHub
+   - Cambia el nombre a `boda_cristina_y_carlos`
+   - El `base-href` ya está configurado en `.github/workflows/deploy.yml` como `/boda_cristina_y_carlos/`
 
 3. **Haz push a la rama main:**
    - El workflow se ejecutará automáticamente
@@ -29,7 +31,7 @@ Este proyecto está configurado para desplegarse automáticamente en GitHub Page
 ### URL de tu sitio
 
 Tu sitio estará disponible en:
-- `https://TU_USUARIO.github.io/wedding_web/`
+- `https://TU_USUARIO.github.io/boda_cristina_y_carlos/`
 
 ### Desarrollo local
 

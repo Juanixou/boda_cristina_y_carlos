@@ -35,7 +35,7 @@ jobs:
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web --release --base-href "/wedding_web/"
+        run: flutter build web --release --base-href "/boda_cristina_y_carlos/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

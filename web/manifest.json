@@ -1,11 +1,11 @@
 {
-    "name": "wedding_web",
-    "short_name": "wedding_web",
+    "name": "Boda de Cristina y Carlos",
+    "short_name": "Boda C y C",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Boda de Cristina y Carlos - Invitación digital",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
