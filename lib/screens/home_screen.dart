@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wedding_web/widgets/hero_section_widget.dart';
-import 'package:wedding_web/widgets/video_section_container.dart';
 import 'package:wedding_web/widgets/wedding_details_section.dart';
-import 'package:wedding_web/widgets/hotels_section.dart';
+import 'package:wedding_web/widgets/hotels_section_v2.dart';
 import 'package:wedding_web/widgets/hair_salons_section.dart';
 import 'package:wedding_web/widgets/how_to_get_there_section.dart';
 import 'package:wedding_web/widgets/wedding_list_section.dart';
@@ -42,10 +41,11 @@ class HomeScreen extends StatelessWidget {
             const WeddingDetailsSection(),
             
             // Sección de Hoteles
-            const HotelsSection(),
+            // const HotelsSection(),
+            const HotelsSectionV2(),
             
             // Sección de Peluquerías
-            //const HairSalonsSection(),
+            const HairSalonsSection(),
             
             // Sección de Cómo llegar
             const HowToGetThereSection(),

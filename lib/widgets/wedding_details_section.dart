@@ -46,10 +46,10 @@ class WeddingDetailsSection extends StatelessWidget {
                           context,
                           title: 'Ceremonia',
                           time: '12:30',
-                          location: 'Catedral de Toledo',
+                          location: 'Catedral de Toledo: Capilla de San Pedro Martir',
                           address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
                           mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
-                          imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Cathedral_of_Toledo_%287079311505%29.jpg',
+                          imageUrl: 'https://s1.wklcdn.com/image_72/2161540/111585105/72388675Master.jpg',
                           applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
                         ),
                         const SizedBox(height: 40),
@@ -73,10 +73,10 @@ class WeddingDetailsSection extends StatelessWidget {
                             context,
                             title: 'Ceremonia',
                             time: '12:30',
-                            location: 'Catedral de Toledo',
+                            location: 'Catedral de Toledo: Capilla de San Pedro Martir',
                             address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
                             mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
-                            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Cathedral_of_Toledo_%287079311505%29.jpg',
+                            imageUrl: 'https://s1.wklcdn.com/image_72/2161540/111585105/72388675Master.jpg',
                             applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
                           ),
                         ),
@@ -112,6 +112,9 @@ class WeddingDetailsSection extends StatelessWidget {
     required String imageUrl,
     required bool applyBlackAndWhiteFilter,
   }) {
+    // Determinar si es Ceremonia para usar imagen local
+    final isCeremony = title == 'Ceremonia';
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -143,37 +146,69 @@ class WeddingDetailsSection extends StatelessWidget {
                       0.2126, 0.7152, 0.0722, 0, 0, // B
                       0,      0,      0,      1, 0, // A
                     ]),
-                    child: Image.network(
-                      imageUrl,
-                      height: 250,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 250,
-                          color: Colors.grey.shade300,
-                          child: const Center(
-                            child: Icon(Icons.image, size: 50, color: Colors.grey),
+                    child: isCeremony
+                        ? Image.asset(
+                            'assets/catedral.jpeg',
+                            height: 250,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 250,
+                                color: Colors.grey.shade300,
+                                child: const Center(
+                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            imageUrl,
+                            height: 250,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 250,
+                                color: Colors.grey.shade300,
+                                child: const Center(
+                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                   )
-                : Image.network(
-                    imageUrl,
-                    height: 250,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
+                : isCeremony
+                    ? Image.asset(
+                        'assets/catedral.jpeg',
                         height: 250,
-                        color: Colors.grey.shade300,
-                        child: const Center(
-                          child: Icon(Icons.image, size: 50, color: Colors.grey),
-                        ),
-                      );
-                    },
-                  ),
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 250,
+                            color: Colors.grey.shade300,
+                            child: const Center(
+                              child: Icon(Icons.image, size: 50, color: Colors.grey),
+                            ),
+                          );
+                        },
+                      )
+                    : Image.network(
+                        imageUrl,
+                        height: 250,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 250,
+                            color: Colors.grey.shade300,
+                            child: const Center(
+                              child: Icon(Icons.image, size: 50, color: Colors.grey),
+                            ),
+                          );
+                        },
+                      ),
           ),
           
           Padding(
