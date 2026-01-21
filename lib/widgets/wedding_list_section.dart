@@ -5,7 +5,7 @@ class WeddingListSection extends StatelessWidget {
   const WeddingListSection({super.key});
 
   final String donationText =
-      'El mejor regalo es compartir este día con vosotros. Si aun así deseáis tener un detalle, hemos habilitado una cuenta para ayudarnos con la luna de miel.';
+      'El mejor regalo es compartir este día con vosotros. Si aun así queréis tener un detalle, hemos habilitado una cuenta para ayudarnos con la luna de miel.';
   final String accountNumber = 'ES12 0128 8700 1201 0585 0142'; // Número de cuenta de ejemplo
 
   @override
