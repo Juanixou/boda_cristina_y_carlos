@@ -1,6 +1,7 @@
 class RSVPForm {
   final String name;
   final bool? willAttend; // true = Sí, false = No, null = no seleccionado
+  final bool? attendsPreboda; // true = Sí, false = No, null = no seleccionado
   final bool hasCompanion;
   final String? companionNames; // Campo de texto para nombres de acompañantes
   final List<String> allergies;
@@ -14,6 +15,7 @@ class RSVPForm {
   RSVPForm({
     required this.name,
     this.willAttend,
+    this.attendsPreboda,
     this.hasCompanion = false,
     this.companionNames,
     this.allergies = const [],
@@ -29,6 +31,7 @@ class RSVPForm {
     return {
       'name': name,
       'willAttend': willAttend,
+      'attendsPreboda': attendsPreboda,
       'hasCompanion': hasCompanion,
       'companionNames': companionNames,
       'allergies': allergies,
@@ -44,6 +47,7 @@ class RSVPForm {
   RSVPForm copyWith({
     String? name,
     bool? willAttend,
+    bool? attendsPreboda,
     bool? hasCompanion,
     String? companionNames,
     List<String>? allergies,
@@ -57,6 +61,7 @@ class RSVPForm {
     return RSVPForm(
       name: name ?? this.name,
       willAttend: willAttend ?? this.willAttend,
+      attendsPreboda: attendsPreboda ?? this.attendsPreboda,
       hasCompanion: hasCompanion ?? this.hasCompanion,
       companionNames: companionNames ?? this.companionNames,
       allergies: allergies ?? this.allergies,

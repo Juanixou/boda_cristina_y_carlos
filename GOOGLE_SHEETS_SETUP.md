@@ -22,7 +22,12 @@ I1: Autobús Catedral-Cigarral
 J1: Autobús vuelta
 K1: Se aloja en Toledo
 L1: Nombre hotel/zona
+M1: Preboda
 ```
+
+Nota: si tu hoja "RSVP" ya existe de antes (sin la columna M), no hace falta
+que la añadas a mano — el script la crea sola la primera vez que alguien
+envía el RSVP tras desplegar la versión actualizada.
 
 ## Paso 2: Crear el Google Apps Script
 
@@ -30,153 +35,8 @@ L1: Nombre hotel/zona
 2. Se abrirá un editor de código
 3. Borra todo el código existente y pega este código:
 
-```javascript
-function doPost(e) {
-  try {
-    // Configurar headers CORS para evitar problemas de "failed to fetch"
-    const output = ContentService.createTextOutput();
-    
-    // Obtener o crear la hoja de cálculo
-    let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('RSVP');
-    
-    // Si la hoja no existe, crearla
-    if (!sheet) {
-      Logger.log('Creando nueva hoja RSVP');
-      sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('RSVP');
-      // Añadir encabezados
-      sheet.getRange(1, 1, 1, 12).setValues([[
-        'Timestamp',
-        'Nombre',
-        'Asistirá',
-        'Tiene acompañante',
-        'Nombres acompañantes',
-        'Menú',
-        'Alergias',
-        'Otras alergias',
-        'Autobús Catedral-Cigarral',
-        'Autobús vuelta',
-        'Se aloja en Toledo',
-        'Nombre hotel/zona'
-      ]]);
-      // Formatear encabezados
-      const headerRange = sheet.getRange(1, 1, 1, 12);
-      headerRange.setFontWeight('bold');
-      headerRange.setBackground('#722F37');
-      headerRange.setFontColor('#FFFFFF');
-      Logger.log('Hoja RSVP creada con encabezados');
-    } else {
-      Logger.log('Hoja RSVP ya existe');
-    }
-    
-    // Verificar que tenemos la hoja
-    if (!sheet) {
-      throw new Error('No se pudo obtener o crear la hoja RSVP');
-    }
-    
-    // Parsear los datos recibidos
-    // Los formularios HTML envían datos en e.parameter, no en e.postData.contents
-    let data;
-    
-    // Primero intentar obtener de parámetros (formulario HTML)
-    if (e.parameter && e.parameter.data) {
-      try {
-        // Los datos vienen codificados como URL, necesitamos decodificarlos primero
-        const decodedData = decodeURIComponent(e.parameter.data);
-        data = JSON.parse(decodedData);
-        Logger.log('Datos recibidos desde formulario HTML (e.parameter.data)');
-      } catch (parseError) {
-        // Si falla, intentar sin decodificar (por si ya viene decodificado)
-        try {
-          data = JSON.parse(e.parameter.data);
-          Logger.log('Datos recibidos sin decodificar');
-        } catch (parseError2) {
-          Logger.log('Error parseando e.parameter.data: ' + parseError.toString());
-          Logger.log('Valor recibido: ' + e.parameter.data.substring(0, 200));
-          throw new Error('Error al parsear datos del formulario: ' + parseError.toString());
-        }
-      }
-    } 
-    // Si no está en parámetros, intentar postData (JSON directo)
-    else if (e.postData && e.postData.contents) {
-      try {
-        data = JSON.parse(e.postData.contents);
-        Logger.log('Datos recibidos desde JSON directo (e.postData.contents)');
-      } catch (parseError) {
-        Logger.log('Error parseando e.postData.contents: ' + parseError.toString());
-        throw new Error('Error al parsear datos JSON: ' + parseError.toString());
-      }
-    } 
-    // Si no hay datos, lanzar error
-    else {
-      Logger.log('No se recibieron datos. e.parameter: ' + JSON.stringify(e.parameter));
-      Logger.log('e.postData: ' + (e.postData ? JSON.stringify(e.postData) : 'null'));
-      throw new Error('No se recibieron datos');
-    }
-    
-    // Log para debugging
-    Logger.log('Datos parseados correctamente. Nombre: ' + (data.name || 'sin nombre'));
-    
-    // Preparar la fila de datos
-    const row = [
-      data.timestamp || new Date().toISOString(),
-      data.name || '',
-      data.willAttend === true ? 'Sí' : data.willAttend === false ? 'No' : '',
-      data.hasCompanion ? 'Sí' : 'No',
-      data.companionNames || '',
-      data.menuOption || '',
-      data.allergies ? data.allergies.join(', ') : '',
-      data.otherAllergies || '',
-      data.busToCelebration || '',
-      data.busReturn || '',
-      data.stayingInToledo === true ? 'Sí' : data.stayingInToledo === false ? 'No' : '',
-      data.hotelName || ''
-    ];
-    
-    Logger.log('Preparando fila de datos: ' + JSON.stringify(row));
-    Logger.log('Nombre de la hoja: ' + sheet.getName());
-    Logger.log('Número de filas antes: ' + sheet.getLastRow());
-    
-    // Añadir la fila a la hoja
-    try {
-      sheet.appendRow(row);
-      Logger.log('Fila añadida exitosamente');
-      Logger.log('Número de filas después: ' + sheet.getLastRow());
-    } catch (appendError) {
-      Logger.log('Error al añadir fila: ' + appendError.toString());
-      throw new Error('Error al guardar datos en la hoja: ' + appendError.toString());
-    }
-    
-    // Devolver respuesta exitosa con headers CORS
-    return output
-      .setContent(JSON.stringify({
-        'status': 'success',
-        'message': 'Datos guardados correctamente'
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
-      
-  } catch (error) {
-    // Log del error completo
-    Logger.log('ERROR en doPost: ' + error.toString());
-    Logger.log('Stack trace: ' + (error.stack || 'No disponible'));
-    
-    // Devolver error con headers CORS
-    const output = ContentService.createTextOutput();
-    return output
-      .setContent(JSON.stringify({
-        'status': 'error',
-        'message': error.toString(),
-        'stack': error.stack || 'No disponible'
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-// Función adicional para manejar CORS en preflight requests
-function doOptions() {
-  return ContentService.createTextOutput('')
-    .setMimeType(ContentService.MimeType.JSON);
-}
-```
+El código completo está en [`google_apps_script/Code.gs`](google_apps_script/Code.gs)
+de este repositorio — cópialo entero y pégalo aquí.
 
 4. Guarda el proyecto con un nombre (por ejemplo, "RSVP Handler")
 5. Haz clic en **Desplegar** → **Nueva implementación**

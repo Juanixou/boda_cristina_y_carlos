@@ -33,6 +33,11 @@ class RSVPCubit extends Cubit<RSVPState> {
     emit(RSVPInitial(form: currentForm.copyWith(willAttend: willAttend)));
   }
 
+  void updateAttendsPreboda(bool? attendsPreboda) {
+    final currentForm = _getCurrentForm();
+    emit(RSVPInitial(form: currentForm.copyWith(attendsPreboda: attendsPreboda)));
+  }
+
   void updateHasCompanion(bool hasCompanion) {
     final currentForm = _getCurrentForm();
     emit(RSVPInitial(

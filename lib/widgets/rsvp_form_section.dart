@@ -185,7 +185,44 @@ class RSVPFormSection extends StatelessWidget {
           // Si asistirá, mostrar el resto del formulario
           if (showFullForm) ...[
             const SizedBox(height: 32),
-            
+
+            // Preboda
+            _buildSectionTitle('Preboda', isMobile),
+            const SizedBox(height: 16),
+
+            Text(
+              '¿Vendrás a la preboda?',
+              style: TextStyle(
+                fontSize: isMobile ? 15 : 16,
+                fontWeight: FontWeight.w600,
+                color: WeddingColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                ChoiceChip(
+                  label: const Text('Sí'),
+                  selected: form.attendsPreboda == true,
+                  onSelected: (selected) {
+                    context.read<RSVPCubit>().updateAttendsPreboda(selected ? true : null);
+                  },
+                  selectedColor: WeddingColors.chipSelected,
+                ),
+                const SizedBox(width: 16),
+                ChoiceChip(
+                  label: const Text('No'),
+                  selected: form.attendsPreboda == false,
+                  onSelected: (selected) {
+                    context.read<RSVPCubit>().updateAttendsPreboda(selected ? false : null);
+                  },
+                  selectedColor: WeddingColors.chipSelected,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 32),
+
             // Acompañantes
             _buildSectionTitle('Acompañantes', isMobile),
             const SizedBox(height: 16),
