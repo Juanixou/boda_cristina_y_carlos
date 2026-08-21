@@ -4,7 +4,7 @@ import 'package:wedding_web/config/wedding_colors.dart';
 
 class WeddingDetailsSection extends StatelessWidget {
   final bool applyBlackAndWhiteFilter;
-  
+
   const WeddingDetailsSection({
     super.key,
     this.applyBlackAndWhiteFilter = false,
@@ -15,7 +15,7 @@ class WeddingDetailsSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 768;
-        
+
         return Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(
@@ -37,19 +37,32 @@ class WeddingDetailsSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              
+
               // Cards lado a lado en desktop, apiladas en móvil
               isMobile
                   ? Column(
                       children: [
                         _buildEventCard(
                           context,
+                          title: 'Preboda',
+                          time: 'Viernes 9 de octubre de 2026 · 20:30',
+                          location: 'Cigarral de Caravantes',
+                          address: 'Cigarral de Caravantes, Toledo',
+                          mapUrl:
+                              'https://www.google.com/maps/search/?api=1&query=Cigarral+de+Caravantes+Toledo',
+                          localAssetPath: 'assets/caravantes.jpeg',
+                          applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
+                        ),
+                        const SizedBox(height: 40),
+                        _buildEventCard(
+                          context,
                           title: 'Ceremonia',
                           time: '12:30',
                           location: 'Catedral de Toledo: Capilla de San Pedro',
                           address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
-                          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
-                          imageUrl: 'https://s1.wklcdn.com/image_72/2161540/111585105/72388675Master.jpg',
+                          mapUrl:
+                              'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
+                          localAssetPath: 'assets/catedral.jpeg',
                           applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
                         ),
                         const SizedBox(height: 40),
@@ -59,41 +72,67 @@ class WeddingDetailsSection extends StatelessWidget {
                           time: '14:00',
                           location: 'Cigarral El Ángel',
                           address: 'Cigarral El Ángel, Toledo',
-                          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
-                          imageUrl: 'https://s2.abcstatics.com/media/espana/2021/07/16/cigarral-krLF--1248x698@abc.jpg',
+                          mapUrl:
+                              'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
+                          imageUrl:
+                              'https://s2.abcstatics.com/media/espana/2021/07/16/cigarral-krLF--1248x698@abc.jpg',
                           applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
                         ),
                       ],
                     )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: _buildEventCard(
-                            context,
-                            title: 'Ceremonia',
-                            time: '12:30',
-                            location: 'Catedral de Toledo: Capilla de San Pedro',
-                            address: 'Calle Cardenal Cisneros, 1, 45002 Toledo',
-                            mapUrl: 'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
-                            imageUrl: 'https://s1.wklcdn.com/image_72/2161540/111585105/72388675Master.jpg',
-                            applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
+                  : IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: _buildEventCard(
+                              context,
+                              title: 'Preboda',
+                              time: 'Viernes 9 de octubre de 2026 · 20:30',
+                              location: 'Cigarral de Caravantes',
+                              address: 'Cigarral de Caravantes, Toledo',
+                              mapUrl:
+                                  'https://www.google.com/maps/search/?api=1&query=Cigarral+de+Caravantes+Toledo',
+                              localAssetPath: 'assets/caravantes.jpeg',
+                              applyBlackAndWhiteFilter:
+                                  applyBlackAndWhiteFilter,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 30),
-                        Expanded(
-                          child: _buildEventCard(
-                            context,
-                            title: 'Celebración',
-                            time: '14:00',
-                            location: 'Cigarral El Ángel',
-                            address: 'Cigarral El Ángel, Toledo',
-                            mapUrl: 'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
-                            imageUrl: 'https://s2.abcstatics.com/media/espana/2021/07/16/cigarral-krLF--1248x698@abc.jpg',
-                            applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
+                          const SizedBox(width: 30),
+                          Expanded(
+                            child: _buildEventCard(
+                              context,
+                              title: 'Ceremonia',
+                              time: '12:30',
+                              location:
+                                  'Catedral de Toledo: Capilla de San Pedro',
+                              address:
+                                  'Calle Cardenal Cisneros, 1, 45002 Toledo',
+                              mapUrl:
+                                  'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
+                              localAssetPath: 'assets/catedral.jpeg',
+                              applyBlackAndWhiteFilter:
+                                  applyBlackAndWhiteFilter,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 30),
+                          Expanded(
+                            child: _buildEventCard(
+                              context,
+                              title: 'Celebración',
+                              time: '14:00',
+                              location: 'Cigarral El Ángel',
+                              address: 'Cigarral El Ángel, Toledo',
+                              mapUrl:
+                                  'https://www.google.com/maps/search/?api=1&query=Cigarral+El+Angel+Toledo',
+                              imageUrl:
+                                  'https://s2.abcstatics.com/media/espana/2021/07/16/cigarral-krLF--1248x698@abc.jpg',
+                              applyBlackAndWhiteFilter:
+                                  applyBlackAndWhiteFilter,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
             ],
           ),
@@ -109,12 +148,10 @@ class WeddingDetailsSection extends StatelessWidget {
     required String location,
     required String address,
     required String mapUrl,
-    required String imageUrl,
+    String? imageUrl,
+    String? localAssetPath,
     required bool applyBlackAndWhiteFilter,
   }) {
-    // Determinar si es Ceremonia para usar imagen local
-    final isCeremony = title == 'Ceremonia';
-    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -144,73 +181,13 @@ class WeddingDetailsSection extends StatelessWidget {
                       0.2126, 0.7152, 0.0722, 0, 0, // R
                       0.2126, 0.7152, 0.0722, 0, 0, // G
                       0.2126, 0.7152, 0.0722, 0, 0, // B
-                      0,      0,      0,      1, 0, // A
+                      0, 0, 0, 1, 0, // A
                     ]),
-                    child: isCeremony
-                        ? Image.asset(
-                            'assets/catedral.jpeg',
-                            height: 250,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 250,
-                                color: Colors.grey.shade300,
-                                child: const Center(
-                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
-                                ),
-                              );
-                            },
-                          )
-                        : Image.network(
-                            imageUrl,
-                            height: 250,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 250,
-                                color: Colors.grey.shade300,
-                                child: const Center(
-                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
-                                ),
-                              );
-                            },
-                          ),
+                    child: _buildCardImage(localAssetPath, imageUrl),
                   )
-                : isCeremony
-                    ? Image.asset(
-                        'assets/catedral.jpeg',
-                        height: 250,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 250,
-                            color: Colors.grey.shade300,
-                            child: const Center(
-                              child: Icon(Icons.image, size: 50, color: Colors.grey),
-                            ),
-                          );
-                        },
-                      )
-                    : Image.network(
-                        imageUrl,
-                        height: 250,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 250,
-                            color: Colors.grey.shade300,
-                            child: const Center(
-                              child: Icon(Icons.image, size: 50, color: Colors.grey),
-                            ),
-                          );
-                        },
-                      ),
+                : _buildCardImage(localAssetPath, imageUrl),
           ),
-          
+
           Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -226,10 +203,11 @@ class WeddingDetailsSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 Row(
                   children: [
-                    Icon(Icons.access_time, color: WeddingColors.iconColor, size: 20),
+                    Icon(Icons.access_time,
+                        color: WeddingColors.iconColor, size: 20),
                     const SizedBox(width: 10),
                     Text(
                       time,
@@ -243,11 +221,12 @@ class WeddingDetailsSection extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.location_on, color: WeddingColors.iconColor, size: 20),
+                    Icon(Icons.location_on,
+                        color: WeddingColors.iconColor, size: 20),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
@@ -278,76 +257,39 @@ class WeddingDetailsSection extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
-                ElevatedButton.icon(
-                  onPressed: () {
-                    html.window.open(mapUrl, '_blank');
-                  },
-                  icon: const Icon(Icons.map, size: 18),
-                  label: const Text(
-                    'Cómo llegar',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: WeddingColors.buttonPrimary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ).copyWith(
-                    overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                      (Set<WidgetState> states) {
-                        if (states.contains(WidgetState.hovered)) {
-                          return WeddingColors.buttonPrimaryHover;
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                
-                // Botón de información histórica solo para Ceremonia
-                if (isCeremony) ...[
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      _showHistoricalInfoDialog(context);
-                    },
-                    icon: const Icon(Icons.info_outline, size: 18),
-                    label: const Text(
-                      'Información histórica',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 1,
+
+                // La Ceremonia tiene un segundo botón (información histórica):
+                // van uno a cada lado en vez de apilados, así todas las
+                // tarjetas terminan con un bloque de botones de la misma
+                // altura y el alto de las 3 cards queda igualado.
+                title == 'Ceremonia'
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: _buildCardButton(
+                              icon: Icons.map,
+                              label: 'Cómo llegar',
+                              onPressed: () =>
+                                  html.window.open(mapUrl, '_blank'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildCardButton(
+                              icon: Icons.info_outline,
+                              label: 'Información histórica',
+                              onPressed: () =>
+                                  _showHistoricalInfoDialog(context),
+                            ),
+                          ),
+                        ],
+                      )
+                    : _buildCardButton(
+                        icon: Icons.map,
+                        label: 'Cómo llegar',
+                        onPressed: () => html.window.open(mapUrl, '_blank'),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: WeddingColors.buttonPrimary,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ).copyWith(
-                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                        (Set<WidgetState> states) {
-                          if (states.contains(WidgetState.hovered)) {
-                            return WeddingColors.buttonPrimaryHover;
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
@@ -356,9 +298,95 @@ class WeddingDetailsSection extends StatelessWidget {
     );
   }
 
+  Widget _buildCardButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 18),
+      label: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w300,
+          letterSpacing: 1,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: WeddingColors.buttonPrimary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ).copyWith(
+        overlayColor: WidgetStateProperty.resolveWith<Color?>(
+          (Set<WidgetState> states) {
+            if (states.contains(WidgetState.hovered)) {
+              return WeddingColors.buttonPrimaryHover;
+            }
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Foto local si se indica, si no una de red, y si no hay ninguna
+  /// (como en la Preboda, que aún no tiene foto propia) un marcador
+  /// decorativo en vez de una imagen rota o inventada.
+  Widget _buildCardImage(String? localAssetPath, String? imageUrl) {
+    if (localAssetPath != null) {
+      return Image.asset(
+        localAssetPath,
+        height: 250,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildImageFallback(),
+      );
+    }
+
+    if (imageUrl != null) {
+      return Image.network(
+        imageUrl,
+        height: 250,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildImageFallback(),
+      );
+    }
+
+    return Container(
+      height: 250,
+      width: double.infinity,
+      color: WeddingColors.backgroundLight,
+      child: Center(
+        child: Icon(
+          Icons.local_bar_outlined,
+          size: 56,
+          color: WeddingColors.iconColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageFallback() {
+    return Container(
+      height: 250,
+      color: Colors.grey.shade300,
+      child: const Center(
+        child: Icon(Icons.image, size: 50, color: Colors.grey),
+      ),
+    );
+  }
+
   void _showHistoricalInfoDialog(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 768;
-    
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -424,7 +452,7 @@ class WeddingDetailsSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Contenido scrolleable
                 Flexible(
                   child: SingleChildScrollView(
@@ -452,4 +480,3 @@ class WeddingDetailsSection extends StatelessWidget {
     );
   }
 }
-
