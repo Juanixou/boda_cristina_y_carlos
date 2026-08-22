@@ -205,17 +205,20 @@ class WeddingDetailsSection extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.access_time,
                         color: WeddingColors.iconColor, size: 20),
                     const SizedBox(width: 10),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: WeddingColors.textPrimary,
-                        letterSpacing: 1,
+                    Expanded(
+                      child: Text(
+                        time,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          color: WeddingColors.textPrimary,
+                          letterSpacing: 1,
+                        ),
                       ),
                     ),
                   ],
