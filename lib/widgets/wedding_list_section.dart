@@ -6,7 +6,7 @@ class WeddingListSection extends StatelessWidget {
 
   final String donationText =
       'El mejor regalo es compartir este día con vosotros. Si aun así queréis tener un detalle, hemos habilitado una cuenta para ayudarnos con la luna de miel.';
-  final String accountNumber = 'ES12 0128 8700 1201 0585 0142'; // Número de cuenta de ejemplo
+  final String accountNumber = 'ES91 1583 0001 1091 0474 5042';
 
   @override
   Widget build(BuildContext context) {
