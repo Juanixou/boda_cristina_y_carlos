@@ -10,11 +10,23 @@ class WeddingDetailsSection extends StatelessWidget {
     this.applyBlackAndWhiteFilter = false,
   });
 
+  // Puertas de la Catedral para la Ceremonia (se muestran en su card).
+  static const _ceremonyEntryDoor =
+      'Puerta de los Leones\no Puerta del Reloj';
+  static const _ceremonyExitDoor = 'Puerta del Reloj';
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < 768;
+
+        // Ancho útil dentro de una card (descontando paddings y separaciones)
+        // para decidir si las puertas caben una al lado de la otra.
+        final cardContentWidth = isMobile
+            ? constraints.maxWidth - 2 * 20 - 2 * 24
+            : (constraints.maxWidth - 2 * 40 - 2 * 30) / 3 - 2 * 24;
+        final doorsSideBySide = cardContentWidth >= 240;
 
         return Container(
           width: double.infinity,
@@ -64,6 +76,9 @@ class WeddingDetailsSection extends StatelessWidget {
                               'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
                           localAssetPath: 'assets/catedral.jpeg',
                           applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
+                          entryDoor: _ceremonyEntryDoor,
+                          exitDoor: _ceremonyExitDoor,
+                          doorsSideBySide: doorsSideBySide,
                         ),
                         const SizedBox(height: 40),
                         _buildEventCard(
@@ -96,6 +111,7 @@ class WeddingDetailsSection extends StatelessWidget {
                               localAssetPath: 'assets/caravantes.jpeg',
                               applyBlackAndWhiteFilter:
                                   applyBlackAndWhiteFilter,
+                              pinButtonsToBottom: true,
                             ),
                           ),
                           const SizedBox(width: 30),
@@ -113,6 +129,10 @@ class WeddingDetailsSection extends StatelessWidget {
                               localAssetPath: 'assets/catedral.jpeg',
                               applyBlackAndWhiteFilter:
                                   applyBlackAndWhiteFilter,
+                              entryDoor: _ceremonyEntryDoor,
+                              exitDoor: _ceremonyExitDoor,
+                              doorsSideBySide: doorsSideBySide,
+                              pinButtonsToBottom: true,
                             ),
                           ),
                           const SizedBox(width: 30),
@@ -129,6 +149,7 @@ class WeddingDetailsSection extends StatelessWidget {
                                   'https://s2.abcstatics.com/media/espana/2021/07/16/cigarral-krLF--1248x698@abc.jpg',
                               applyBlackAndWhiteFilter:
                                   applyBlackAndWhiteFilter,
+                              pinButtonsToBottom: true,
                             ),
                           ),
                         ],
@@ -151,7 +172,128 @@ class WeddingDetailsSection extends StatelessWidget {
     String? imageUrl,
     String? localAssetPath,
     required bool applyBlackAndWhiteFilter,
+    String? entryDoor,
+    String? exitDoor,
+    bool doorsSideBySide = true,
+    bool pinButtonsToBottom = false,
   }) {
+    final details = Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 2,
+              color: WeddingColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.access_time, color: WeddingColors.iconColor, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  time,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: WeddingColors.textPrimary,
+                    letterSpacing: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.location_on, color: WeddingColors.iconColor, size: 20),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      location,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: WeddingColors.textPrimary,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      address,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                        color: WeddingColors.textSecondary,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          if (entryDoor != null && exitDoor != null) ...[
+            _buildDoorsInfo(
+              entryDoor: entryDoor,
+              exitDoor: exitDoor,
+              sideBySide: doorsSideBySide,
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // En escritorio las 3 cards se estiran a la altura de la más alta;
+          // empujando los botones al fondo quedan alineados entre sí.
+          if (pinButtonsToBottom) const Spacer(),
+
+          // La Ceremonia tiene un segundo botón (información histórica):
+          // van uno a cada lado en vez de apilados para que el bloque de
+          // botones tenga la misma altura en todas las tarjetas.
+          title == 'Ceremonia'
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _buildCardButton(
+                        icon: Icons.map,
+                        label: 'Cómo llegar',
+                        onPressed: () => html.window.open(mapUrl, '_blank'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildCardButton(
+                        icon: Icons.info_outline,
+                        label: 'Información histórica',
+                        onPressed: () => _showHistoricalInfoDialog(context),
+                      ),
+                    ),
+                  ],
+                )
+              : _buildCardButton(
+                  icon: Icons.map,
+                  label: 'Cómo llegar',
+                  onPressed: () => html.window.open(mapUrl, '_blank'),
+                ),
+        ],
+      ),
+    );
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -188,116 +330,106 @@ class WeddingDetailsSection extends StatelessWidget {
                 : _buildCardImage(localAssetPath, imageUrl),
           ),
 
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: 2,
-                    color: WeddingColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.access_time,
-                        color: WeddingColors.iconColor, size: 20),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        time,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                          color: WeddingColors.textPrimary,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.location_on,
-                        color: WeddingColors.iconColor, size: 20),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            location,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: WeddingColors.textPrimary,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            address,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: WeddingColors.textSecondary,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-
-                // La Ceremonia tiene un segundo botón (información histórica):
-                // van uno a cada lado en vez de apilados, así todas las
-                // tarjetas terminan con un bloque de botones de la misma
-                // altura y el alto de las 3 cards queda igualado.
-                title == 'Ceremonia'
-                    ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _buildCardButton(
-                              icon: Icons.map,
-                              label: 'Cómo llegar',
-                              onPressed: () =>
-                                  html.window.open(mapUrl, '_blank'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: _buildCardButton(
-                              icon: Icons.info_outline,
-                              label: 'Información histórica',
-                              onPressed: () =>
-                                  _showHistoricalInfoDialog(context),
-                            ),
-                          ),
-                        ],
-                      )
-                    : _buildCardButton(
-                        icon: Icons.map,
-                        label: 'Cómo llegar',
-                        onPressed: () => html.window.open(mapUrl, '_blank'),
-                      ),
-              ],
-            ),
-          ),
+          pinButtonsToBottom ? Expanded(child: details) : details,
         ],
       ),
+    );
+  }
+
+  /// Recuadro con la puerta de entrada y la de salida. Van una al lado de la
+  /// otra si la card es lo bastante ancha, y una debajo de otra si no.
+  Widget _buildDoorsInfo({
+    required String entryDoor,
+    required String exitDoor,
+    required bool sideBySide,
+  }) {
+    final entry = _buildDoorItem(
+      icon: Icons.login,
+      label: 'ENTRADA',
+      door: entryDoor,
+    );
+    final exit = _buildDoorItem(
+      icon: Icons.logout,
+      label: 'SALIDA',
+      door: exitDoor,
+    );
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: WeddingColors.backgroundLight,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: WeddingColors.borderColor),
+      ),
+      child: sideBySide
+          ? IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: entry),
+                  VerticalDivider(
+                    width: 24,
+                    thickness: 1,
+                    color: WeddingColors.borderColor,
+                  ),
+                  Expanded(child: exit),
+                ],
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                entry,
+                Divider(
+                  height: 24,
+                  thickness: 1,
+                  color: WeddingColors.borderColor,
+                ),
+                exit,
+              ],
+            ),
+    );
+  }
+
+  Widget _buildDoorItem({
+    required IconData icon,
+    required String label,
+    required String door,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: WeddingColors.iconColor, size: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 2,
+                  color: WeddingColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                door,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5,
+                  height: 1.3,
+                  color: WeddingColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

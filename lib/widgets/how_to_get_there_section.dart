@@ -17,6 +17,7 @@ class _HowToGetThereSectionState extends State<HowToGetThereSection> {
 
   final String zocodoverLocation = 'https://www.google.com/maps/search/?api=1&query=Plaza+de+Zocodover+Toledo';
   final String cigarralLocation = 'https://www.google.com/maps/search/?api=1&query=Cigarral+del+Angel+Toledo';
+  final String cardenalLocation = 'https://www.google.com/maps/search/?api=1&query=Hostal+del+Cardenal+Paseo+de+Recaredo+Toledo';
 
   final List<Map<String, String>> churchParkings = const [
     {
@@ -509,31 +510,102 @@ class _HowToGetThereSectionState extends State<HowToGetThereSection> {
                 width: 1,
               ),
             ),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.schedule,
-                  color: WeddingColors.iconColor,
-                  size: isMobile ? 18 : 20,
+                _buildBusReturnInfoRow(
+                  icon: Icons.schedule,
+                  label: 'Hora de regreso',
+                  value: 'Sobre las 00:30 – 01:00 de la madrugada',
+                  isMobile: isMobile,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Las paradas y horarios están pendientes de confirmar y os los comunicaremos más adelante a través de la web.',
-                    style: TextStyle(
-                      fontSize: isMobile ? 12 : 14,
-                      color: WeddingColors.textSecondary,
-                      fontStyle: FontStyle.italic,
-                      height: 1.4,
-                    ),
-                  ),
+                const SizedBox(height: 12),
+                _buildBusReturnInfoRow(
+                  icon: Icons.location_on,
+                  label: 'Parada en Toledo',
+                  value: 'Hostal del Cardenal',
+                  detail: 'Paseo de Recaredo, junto a la Puerta de Bisagra',
+                  url: cardenalLocation,
+                  isMobile: isMobile,
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBusReturnInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    String? detail,
+    String? url,
+    required bool isMobile,
+  }) {
+    final valueStyle = TextStyle(
+      fontSize: isMobile ? 14 : 16,
+      fontWeight: FontWeight.w500,
+      color: url != null
+          ? WeddingColors.burgundyPrimary
+          : WeddingColors.textPrimary,
+      decoration: url != null ? TextDecoration.underline : null,
+      height: 1.4,
+    );
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          color: WeddingColors.iconColor,
+          size: isMobile ? 18 : 20,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: isMobile ? 12 : 14,
+                  color: WeddingColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              url != null
+                  ? InkWell(
+                      onTap: () => html.window.open(url, '_blank'),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(child: Text(value, style: valueStyle)),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.open_in_new,
+                            size: isMobile ? 14 : 16,
+                            color: WeddingColors.iconColor,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text(value, style: valueStyle),
+              if (detail != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  detail,
+                  style: TextStyle(
+                    fontSize: isMobile ? 12 : 14,
+                    color: WeddingColors.textSecondary,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
     );
   }
 
