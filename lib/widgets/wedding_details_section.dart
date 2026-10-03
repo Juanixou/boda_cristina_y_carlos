@@ -2,6 +2,9 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:wedding_web/config/wedding_colors.dart';
 
+/// Puerta de la Catedral con el enlace a su ubicación en Google Maps.
+typedef Door = ({String name, String mapUrl});
+
 class WeddingDetailsSection extends StatelessWidget {
   final bool applyBlackAndWhiteFilter;
 
@@ -11,9 +14,18 @@ class WeddingDetailsSection extends StatelessWidget {
   });
 
   // Puertas de la Catedral para la Ceremonia (se muestran en su card).
-  static const _ceremonyEntryDoor =
-      'Puerta de los Leones\no Puerta del Reloj';
-  static const _ceremonyExitDoor = 'Puerta del Reloj';
+  static const _puertaDeLosLeones = (
+    name: 'Puerta de los Leones',
+    mapUrl:
+        'https://www.google.com/maps/search/?api=1&query=Puerta+de+los+Leones+Calle+Cardenal+Cisneros+6+Toledo',
+  );
+  static const _puertaDelReloj = (
+    name: 'Puerta del Reloj',
+    mapUrl:
+        'https://www.google.com/maps/search/?api=1&query=Puerta+del+Reloj+Catedral+de+Toledo',
+  );
+  static const _ceremonyEntryDoors = [_puertaDeLosLeones, _puertaDelReloj];
+  static const _ceremonyExitDoors = [_puertaDelReloj];
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +88,8 @@ class WeddingDetailsSection extends StatelessWidget {
                               'https://www.google.com/maps/search/?api=1&query=Catedral+de+Toledo',
                           localAssetPath: 'assets/catedral.jpeg',
                           applyBlackAndWhiteFilter: applyBlackAndWhiteFilter,
-                          entryDoor: _ceremonyEntryDoor,
-                          exitDoor: _ceremonyExitDoor,
+                          entryDoors: _ceremonyEntryDoors,
+                          exitDoors: _ceremonyExitDoors,
                           doorsSideBySide: doorsSideBySide,
                         ),
                         const SizedBox(height: 40),
@@ -129,8 +141,8 @@ class WeddingDetailsSection extends StatelessWidget {
                               localAssetPath: 'assets/catedral.jpeg',
                               applyBlackAndWhiteFilter:
                                   applyBlackAndWhiteFilter,
-                              entryDoor: _ceremonyEntryDoor,
-                              exitDoor: _ceremonyExitDoor,
+                              entryDoors: _ceremonyEntryDoors,
+                              exitDoors: _ceremonyExitDoors,
                               doorsSideBySide: doorsSideBySide,
                               pinButtonsToBottom: true,
                             ),
@@ -172,8 +184,8 @@ class WeddingDetailsSection extends StatelessWidget {
     String? imageUrl,
     String? localAssetPath,
     required bool applyBlackAndWhiteFilter,
-    String? entryDoor,
-    String? exitDoor,
+    List<Door>? entryDoors,
+    List<Door>? exitDoors,
     bool doorsSideBySide = true,
     bool pinButtonsToBottom = false,
   }) {
@@ -248,10 +260,10 @@ class WeddingDetailsSection extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          if (entryDoor != null && exitDoor != null) ...[
+          if (entryDoors != null && exitDoors != null) ...[
             _buildDoorsInfo(
-              entryDoor: entryDoor,
-              exitDoor: exitDoor,
+              entryDoors: entryDoors,
+              exitDoors: exitDoors,
               sideBySide: doorsSideBySide,
             ),
             const SizedBox(height: 24),
@@ -339,19 +351,19 @@ class WeddingDetailsSection extends StatelessWidget {
   /// Recuadro con la puerta de entrada y la de salida. Van una al lado de la
   /// otra si la card es lo bastante ancha, y una debajo de otra si no.
   Widget _buildDoorsInfo({
-    required String entryDoor,
-    required String exitDoor,
+    required List<Door> entryDoors,
+    required List<Door> exitDoors,
     required bool sideBySide,
   }) {
     final entry = _buildDoorItem(
       icon: Icons.login,
       label: 'ENTRADA',
-      door: entryDoor,
+      doors: entryDoors,
     );
     final exit = _buildDoorItem(
       icon: Icons.logout,
       label: 'SALIDA',
-      door: exitDoor,
+      doors: exitDoors,
     );
 
     return Container(
@@ -395,7 +407,7 @@ class WeddingDetailsSection extends StatelessWidget {
   Widget _buildDoorItem({
     required IconData icon,
     required String label,
-    required String door,
+    required List<Door> doors,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,17 +427,37 @@ class WeddingDetailsSection extends StatelessWidget {
                   color: WeddingColors.textSecondary,
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                door,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.5,
-                  height: 1.3,
-                  color: WeddingColors.textPrimary,
+              // Una fila por puerta; cada nombre abre su ubicación en el mapa.
+              for (final door in doors) ...[
+                const SizedBox(height: 4),
+                InkWell(
+                  onTap: () => html.window.open(door.mapUrl, '_blank'),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          door.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.5,
+                            height: 1.3,
+                            color: WeddingColors.burgundyPrimary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.open_in_new,
+                        size: 14,
+                        color: WeddingColors.iconColor,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
