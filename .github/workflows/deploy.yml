@@ -35,7 +35,10 @@ jobs:
         run: flutter pub get
 
       - name: Build web
-        run: flutter build web --release --base-href "/boda_cristina_y_carlos/"
+        # Sin service worker: con la caché "offline-first" los navegadores que
+        # ya habían visitado la web podían mezclar código nuevo con recursos
+        # viejos (p. ej. la fuente de iconos) y no ver los últimos cambios.
+        run: flutter build web --release --base-href "/boda_cristina_y_carlos/" --pwa-strategy=none
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
